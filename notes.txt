@@ -1,0 +1,15 @@
+23:25 12/11/2020
+
+notes when trying to create a route:
+
+most tutorials for laravel show the old way of adding a controller to a route and since i'm using laravel 8 it doesn't work like that anymore.
+
+    the new syntax of adding a controller to a route is:
+
+    Route::get('/', [HomeController::class, 'index'])
+
+    the new syntax of adding a controller to a route is: 
+    
+    Route::get('/', 'HomeController@index');
+
+    to use the old syntax i had to uncomment line 29 in the RouteServiceProvider
