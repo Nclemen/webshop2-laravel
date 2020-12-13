@@ -6,10 +6,19 @@
                         <div class="col-12">
                                 <h1>Create New Category</h1>
                         </div>
-                        <div class="form-group">
-                        <form action="{{ $name }}" class="form form-control">
-                                
-                        </form>
+                        <div class="col-12 form-group">
+                                <form action="{{ route('category.store') }}" class="form"  method="POST"  >
+                                        {{-- @method('post') --}}
+                                        @csrf
+
+                                        <label for="name">Category name</label>
+                                        <input name="name" id="name" type="text" class="@error('name') is-invalid @enderror form-control" placeholder="categorie name">
+                                        @error('name')
+                                                <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                
+                                        <input type="submit" value="Submit" class="btn btn-primary" >
+                                </form>
                         </div>
                 </div>
 @endsection

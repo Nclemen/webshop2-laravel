@@ -23,3 +23,65 @@ notes when trying to add categories to navbar
 04:01 12/13/2020
 
 - trying to decide whether or not i install the laravel collective html package so i can use that to create forms or just type them out with what blade currently has to offer.
+
+
+17:19 12/13/2020
+
+notes when making relationships in migrations
+
+- products belong to 1 category so u have to create a column for that relation
+
+  id() is used for the categories and that makes it the id column a bigIncrement
+
+  bigIncrements creates an auto-incrementing UNSIGNED BIGINT
+	
+  and so there are no errors between the values id from the categories table and category_id table in the products table
+  you have to make category_id an UNSIGNED BIGINT like this:
+
+	$table->unsignedBigInteger('category_id')->nullable($value = true);
+	
+- this is how u add the foreign key :
+
+	$table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
+
+- laravel has another method called foreignId that does all that for you as long as you follow the naming conventions laravel uses for tables
+	example:
+
+	     $table->foreignId('category_id')
+                   ->nullable($value = true)
+                   ->constrained()
+                   ->onDelete('set null');
+
+17:49 12/13/2020
+
+notes when adding validation to controller
+
+- validating a request from a form can be done like this: 
+	
+	$validated = $request->validate([
+            'name' => 'required|string|',
+
+        ]);
+
+21:20 12/13/2020
+
+notes when creating the controller method for categories
+
+- the code below can all ben done with only one method if you know the primary key for the model:
+
+         $category = Category::find($id);
+
+        if ($category == null){
+            return redirect()->route('category.index');
+        } else {
+            $flight->delete();
+
+            return redirect()->route('category.index');
+        }
+	
+
+
+    like this:
+	
+	Flight::destroy(1);
+

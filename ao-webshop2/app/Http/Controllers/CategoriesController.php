@@ -14,8 +14,8 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        return Category::all();
-        return view('admin.category.index');
+        $categories = Category::all();
+        return view('admin.category.index', ['categories' => $categories]);
     }
 
     /**
@@ -38,7 +38,15 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|filled',
+        ]);
+
+        $category = new Category;
+        $category->name = $request->name;
+        $category->save();
+
+        return redirect()->route('category.index');
     }
 
     /**
@@ -49,7 +57,14 @@ class CategoriesController extends Controller
      */
     public function show($id)
     {
-        return view('admin.category.show');
+        $category = Category::find($id);
+
+        if ($category == null){
+            return redirect()->route('category.index');
+        } else {
+            return view('admin.category.show',['category'=>$category]);
+        }
+        
     }
 
     /**
@@ -60,8 +75,13 @@ class CategoriesController extends Controller
      */
     public function edit($id)
     {
-        //
-        return view('admin.category.edit');
+        $category = Category::find($id);
+
+        if ($category == null){
+            return redirect()->route('category.index');
+        } else {
+            return view('admin.category.edit', ['category' => $category]);
+        }
 
     }
 
@@ -74,7 +94,20 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required',
+        ]);
+
+        $category = Category::find($id);
+
+        if ($category == null){
+            return redirect()->route('category.index');
+        } else {
+        $category->name = $request->name;
+        $category->save();
+            return redirect()->route('category.show', ['category' => $category->id]);
+        }
+        
     }
 
     /**
@@ -85,6 +118,18 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // $category = Category::find($id);
+
+        // if ($category == null){
+        //     return redirect()->route('category.index');
+        // } else {
+        //     $flight->delete();
+
+        //     return redirect()->route('category.index');
+        // }
+
+        Category::destroy($id);
+        return redirect()->route('category.index');
+
     }
 }

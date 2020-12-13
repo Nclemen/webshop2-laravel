@@ -18,9 +18,9 @@ class CreateProductsTable extends Migration
             $table->string('name')->nullable($value = false);
             $table->Decimal('price', 7, 2);
             $table->mediumText('description')->nullable($value = false);
-            $table->bigInteger('category_id')->nullable($value = true);
-            $table->foreign('category_id')
-                  ->references('id')->on('categories')
+            $table->foreignId('category_id')
+                  ->nullable($value = true)
+                  ->constrained()
                   ->onDelete('set null');
         });
     }
