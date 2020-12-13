@@ -13,3 +13,13 @@ most tutorials for laravel show the old way of adding a controller to a route an
     Route::get('/', 'HomeController@index');
 
     to use the old syntax i had to uncomment line 29 in the RouteServiceProvider
+
+13:16 12/12/2020
+
+notes when trying to add categories to navbar
+
+- had to add some line to boot() in the AppServiceController
+
+04:01 12/13/2020
+
+- trying to decide whether or not i install the laravel collective html package so i can use that to create forms or just type them out with what blade currently has to offer.
