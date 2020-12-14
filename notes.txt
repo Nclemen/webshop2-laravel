@@ -85,3 +85,26 @@ notes when creating the controller method for categories
 	
 	Flight::destroy(1);
 
+15:52 12/14/2020
+
+
+
+/*
+
+    Route::resource('admin/category','CategoriesController') creates all of these routes below
+
+    // Route::get('/admin/category','CategoriesController@index')->name('category.index');
+
+    // Route::post('/admin/category','CategoriesController@store')->name('category.store');
+
+    // Route::get('/admin/category/create','CategoriesController@create')->name('category.create');
+
+    // Route::get('/admin/category/{category}','CategoriesController@show')->name('category.show');
+
+    // Route::put('/admin/category/{category}','CategoriesController@update')->name('category.update');
+
+    // Route::delete('/admin/category/{category}','CategoriesController@destroy')->name('category.destroy');
+
+    // Route::get('/admin/category/{category}/edit','CategoriesController@edit')->name('category.edit');
+
+*/

@@ -59,6 +59,7 @@ class Product extends Model
      */
     protected $attributes = [
         'price' => 0.00,
+        'description' => 'product description',
     ];
 
     /**

@@ -11,6 +11,13 @@ class Table extends Component
      * 
      * @var array
      */
+    public $headers;
+
+    /**
+     *  the table content
+     * 
+     * @var array
+     */
     public $content;
 
     /**
@@ -25,8 +32,9 @@ class Table extends Component
      *
      * @return void
      */
-    public function __construct($content, $modelName)
+    public function __construct($headers, $content, $modelName)
     {
+        $this->headers = $headers;
         $this->content = $content;
         $this->modelName = $modelName;
     }

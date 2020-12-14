@@ -27,26 +27,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'PagesController@index')->name('main.index');
 
-Route::get('/hello', function () {
-    return '<h1> hello </h1>';
-})->name('test.hello');
+// Route::get('/hello', function () {
+//     return '<h1> hello </h1>';
+// })->name('test.hello');
 
 // Route::resource('examples','ExampleController');
-// Route::resource('category','CategoriesController');
 
-Route::get('/admin/category','CategoriesController@index')->name('category.index');
-
-Route::post('/admin/category','CategoriesController@store')->name('category.store');
-
-Route::get('/admin/category/create','CategoriesController@create')->name('category.create');
-
-Route::get('/admin/category/{category}','CategoriesController@show')->name('category.show');
-
-Route::put('/admin/category/{category}','CategoriesController@update')->name('category.update');
-
-Route::delete('/admin/category/{category}','CategoriesController@destroy')->name('category.destroy');
-
-Route::get('/admin/category/{category}/edit','CategoriesController@edit')->name('category.edit');
-
+Route::resources([
+    'admin/category'=>'CategoriesController',
+    'admin/product'=>'ProductsController',
+]);
 
 // Route::get('/shop', 'WebshopController@index');

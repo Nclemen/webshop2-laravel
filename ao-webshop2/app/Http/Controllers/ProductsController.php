@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
+use App\Models\Category;
 use App\Models\Product;
+
 class ProductsController extends Controller
 {
     /**
@@ -13,8 +16,14 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        return Product::all();
-        return view('product.index');
+        $headers = Schema::getColumnListing('products');
+
+        $products = Product::all();
+
+        return view('admin.product.index',[
+            'products'=>$products,
+            'headers'=> $headers,
+        ]);
     }
 
     /**
@@ -24,8 +33,11 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        //
-        return view('product.create');
+        $categories = Category::all();
+
+        return view('admin.product.create',[
+            'categories'=>$categories
+        ]);
 
     }
 
@@ -37,7 +49,19 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|filled',
+            'description' => 'required|string|filled',
+        ]);
+
+        $product = new Product;
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = $request->price;
+        $product->category_id = $request->category;
+        $product->save();
+
+        return redirect()->route('product.index');
     }
 
     /**
@@ -48,7 +72,13 @@ class ProductsController extends Controller
      */
     public function show($id)
     {
-        return view('product.show');
+        $product = Product::find($id);
+
+        if ($product == null){
+            return redirect()->route('product.index');
+        } else {
+            return view('admin.product.show',['product'=>$product]);
+        }
     }
 
     /**
@@ -59,8 +89,18 @@ class ProductsController extends Controller
      */
     public function edit($id)
     {
-        //
-        return view('product.edit');
+        $product = Product::find($id);
+
+        $categories = Category::all();
+
+        if ($product == null){
+            return redirect()->route('product.index');
+        } else {
+            return view('admin.product.edit', [
+                'product' => $product,
+                'categories'=>$categories,
+                ]);
+        }
 
     }
 
@@ -73,7 +113,23 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|filled',
+            'description' => 'required|string|filled',
+        ]);
+
+        $product = Product::find($id);
+
+        if ($product == null){
+            return redirect()->route('product.index');
+        } else {
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = $request->price;
+        $product->category_id = $request->category;
+        $product->save();
+            return redirect()->route('product.show', ['product' => $product->id]);
+        }
     }
 
     /**
@@ -84,6 +140,7 @@ class ProductsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Product::destroy($id);
+        return redirect()->route('product.index');
     }
 }

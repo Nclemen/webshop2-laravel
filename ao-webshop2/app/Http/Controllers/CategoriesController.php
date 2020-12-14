@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Category;
 
 class CategoriesController extends Controller
@@ -14,8 +15,14 @@ class CategoriesController extends Controller
      */
     public function index()
     {
+        $headers = Schema::getColumnListing('categories');
+        
         $categories = Category::all();
-        return view('admin.category.index', ['categories' => $categories]);
+        
+        return view('admin.category.index', [
+            'categories' => $categories,
+            'headers' => $headers,
+            ]);
     }
 
     /**
