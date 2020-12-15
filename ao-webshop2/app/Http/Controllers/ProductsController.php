@@ -38,7 +38,6 @@ class ProductsController extends Controller
         return view('admin.product.create',[
             'categories'=>$categories
         ]);
-
     }
 
     /**
@@ -49,17 +48,12 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|filled',
             'description' => 'required|string|filled',
         ]);
 
-        $product = new Product;
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->category_id = $request->category;
-        $product->save();
+        Product::create($request->except('_token'));
 
         return redirect()->route('product.index');
     }
@@ -113,7 +107,7 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|filled',
             'description' => 'required|string|filled',
         ]);
@@ -123,11 +117,12 @@ class ProductsController extends Controller
         if ($product == null){
             return redirect()->route('product.index');
         } else {
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->category_id = $request->category;
-        $product->save();
+            $product->name = $request->name;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            $product->category_id = $request->category;
+            $product->save();
+
             return redirect()->route('product.show', ['product' => $product->id]);
         }
     }

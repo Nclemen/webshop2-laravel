@@ -30,7 +30,7 @@
                                         @enderror
 
                                         <label for="category">Select category</label>
-                                        <select class="form-control" id="category" name="category">
+                                        <select class="form-control" id="category" name="category_id">
                                                 <option>select a category</option>
                                                 @foreach ($categories as $item)
                                                         <option value="{{ $item->id }}">{{$item->name}}</option>

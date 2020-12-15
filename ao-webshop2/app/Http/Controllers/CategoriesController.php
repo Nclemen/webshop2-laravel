@@ -45,13 +45,11 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|filled',
         ]);
 
-        $category = new Category;
-        $category->name = $request->name;
-        $category->save();
+        Category::create($request->except('_token'));
 
         return redirect()->route('category.index');
     }
@@ -101,7 +99,7 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required',
         ]);
 

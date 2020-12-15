@@ -14,10 +14,17 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        // Category::factory(5)->create();
+        $categories = [
+            'Clothes',
+            'Books',
+            'Computer',
+            'Movies',
+            'school',
+        ];
 
-        // DB::table('categories')->insert([
-        //     'name' => Str::random(5),
-        // ]);
+        foreach ($categories as $value) {
+            Category::factory()->create(['name'=>$value]);
+        }
+        
     }
 }
