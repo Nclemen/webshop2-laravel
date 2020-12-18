@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
@@ -32,10 +33,16 @@ class RegisterController extends Controller
             'email' => 'required|email:filter|string|filled',
             'password' => 'required|string|confirmed|filled',
         ]);
-            
-        $request->password = Hash::make($request->password);
+        
+        $credentials = ['email' => $request->email, 'password' => $request->password];
+        
+        $request['password'] = Hash::make($request->password);
 
         User::create($request->except('_token','password_confirmation'));
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+        }
 
         return redirect()->route('main.index');
 
