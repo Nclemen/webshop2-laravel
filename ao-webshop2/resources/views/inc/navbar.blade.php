@@ -9,9 +9,11 @@
           <li class="nav-item active">
             <a class="nav-link" href="{{ route('main.index') }}">Home <span class="sr-only">(current)</span></a>
           </li>
+          @if (Auth::check() && Auth::user()->is_admin)
           <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.index') }}">admin</a>
           </li>
+          @endif
           <li class="nav-item">
             <a class="nav-link disabled" href="#">Disabled</a>
           </li>
@@ -25,8 +27,16 @@
           <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form> --}}
-        <a href="#" class="btn btn-outline-secondary my-2 my-sm-0" type="submit">register</a>
-        <a href="#" class="btn btn-outline-primary my-2 my-sm-0" type="submit">login</a>
+        @if (Auth::check())
+          <a href="#" class="" type="submit">profile</a>
+          <form action="{{route('logout')}}" class="form" method="post">
+            @csrf
+            <input type="submit" value="logout" class="btn btn-danger" >
+          </form>
+        @else 
+          <a href="{{ route('registerForm') }}" class="btn btn-outline-secondary my-2 my-sm-0" type="submit">register</a>
+          <a href="{{ route('loginForm') }}" class="btn btn-outline-primary my-2 my-sm-0" type="submit">login</a>
+        @endif
       </div>
     </div>
     </nav>

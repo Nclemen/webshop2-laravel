@@ -27,7 +27,34 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'PagesController@index')->name('main.index');
 
-Route::get('/admin', 'AdminController@index')->name('admin.index');
+Route::get('/login', 'LoginController@loginForm')->name('loginForm');
+
+Route::post('/login', 'LoginController@authenticate')->name('authenticate');
+
+Route::post('/logout', 'LoginController@logout')->name('logout');
+
+Route::get('/register', 'RegisterController@registerForm')->name('registerForm');
+
+Route::post('/register', 'RegisterController@register')->name('register');
+
+
+// Route::get('/shop', 'ShopController@index')->name('index');
+
+
+// admin routes
+
+
+// Route::resources([
+//     'admin/category'=>'CategoriesController',
+//     'admin/product'=>'ProductsController'
+// ]);
+    
+Route::middleware('isAdmin')->get('/admin', 'AdminController@index')->name('admin.index');
+
+Route::middleware('isAdmin')->resource('admin/category','CategoriesController');
+
+Route::middleware('isAdmin')->resource('admin/product','ProductsController');
+
 
 
 // Route::get('/hello', function () {
@@ -36,10 +63,7 @@ Route::get('/admin', 'AdminController@index')->name('admin.index');
 
 // Route::resource('examples','ExampleController');
 
-Route::resources([
-    'admin/category'=>'CategoriesController',
-    'admin/product'=>'ProductsController'
-]);
+
 /*
 
     Route::resource('admin/category','CategoriesController') creates all of these routes below

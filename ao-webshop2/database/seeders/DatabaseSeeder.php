@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,5 +16,19 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
+
+        $categories = [
+            'Clothes',
+            'Books',
+            'Computer',
+            'Movies',
+            'school',
+        ];
+
+        foreach ($categories as $value) {
+            $category = Category::factory()->create(['name'=>$value]);
+
+            Product::factory()->count(5)->for($category);
+        }
     }
 }

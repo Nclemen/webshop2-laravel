@@ -25,6 +25,5 @@ class CategorySeeder extends Seeder
         foreach ($categories as $value) {
             Category::factory()->create(['name'=>$value]);
         }
-        
     }
 }
