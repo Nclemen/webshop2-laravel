@@ -17,7 +17,7 @@
                                         @enderror
 
                                         <label for="password">password</label>
-                                        <input name="password" id="password" type="text" class="@error('password') is-invalid @enderror form-control" placeholder="password">
+                                        <input name="password" id="password" type="password" class="@error('password') is-invalid @enderror form-control" placeholder="password">
                                         @error('password')
                                                 <div class="alert alert-danger">{{ $message }}</div>
                                         @enderror

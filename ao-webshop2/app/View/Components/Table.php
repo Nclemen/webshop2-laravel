@@ -28,15 +28,28 @@ class Table extends Component
     public $modelName;
 
     /**
+     *  whether or not options are added
+     * 
+     * @var boolean
+     */
+    public $options;
+
+    /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($headers, $content, $modelName)
+    public function __construct($headers, $content, $modelName, $options = "true")
     {
         $this->headers = $headers;
         $this->content = $content;
         $this->modelName = $modelName;
+        if ($options == "true") {
+            $this->options = true;
+        } else {
+            $this->options = false;
+        }
+        ;
     }
 
     /**

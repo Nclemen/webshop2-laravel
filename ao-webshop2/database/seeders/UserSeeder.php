@@ -20,6 +20,12 @@ class UserSeeder extends Seeder
                 'email'=>'admin@ao-webshop.com',
                 'is_admin'=>'1',
                 ]);
+            
+            User::factory()->create([
+                'name'=>'henk',
+                'email'=>'henk@ao-webshop.com',
+                'is_admin'=>false,
+                ]);
 
     }
 }

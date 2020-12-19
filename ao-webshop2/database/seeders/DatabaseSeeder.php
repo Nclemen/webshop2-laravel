@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
         foreach ($categories as $value) {
             $category = Category::factory()->create(['name'=>$value]);
 
-            Product::factory()->count(5)->for($category);
+            Product::factory()->count(5)->for($category)->create();
         }
     }
 }

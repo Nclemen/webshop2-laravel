@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Category;
+use App\Models\User;
 
-class CategoriesController extends Controller
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,12 +15,19 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $headers = Schema::getColumnListing('categories');
+        //get table headers
+        $headers = Schema::getColumnListing('users');
+
+        //remove unwanted headers
+        unset(
+            $headers[array_search('password',$headers)],
+            $headers[array_search('remember_token',$headers)]
+        );
         
-        $categories = Category::all();
+        $user = User::all();
         
-        return view('admin.category.index', [
-            'categories' => $categories,
+        return view('admin.user.index', [
+            'users' => $user,
             'headers' => $headers,
             ]);
     }
@@ -33,7 +40,7 @@ class CategoriesController extends Controller
     public function create()
     {
         //
-        return view('admin.category.create');
+        return view('admin.user.create');
 
     }
 
@@ -49,9 +56,9 @@ class CategoriesController extends Controller
             'name' => 'required|string|filled',
         ]);
 
-        Category::create($request->except('_token'));
+        User::create($request->except('_token'));
 
-        return redirect()->route('category.index');
+        return redirect()->route('user.index');
     }
 
     /**
@@ -62,12 +69,12 @@ class CategoriesController extends Controller
      */
     public function show($id)
     {
-        $category = Category::find($id);
+        $user = User::find($id);
 
-        if ($category == null){
-            return redirect()->route('category.index');
+        if ($user == null){
+            return redirect()->route('user.index');
         } else {
-            return view('admin.category.show',['category'=>$category]);
+            return view('admin.user.show',['user'=>$user]);
         }
         
     }
@@ -80,12 +87,12 @@ class CategoriesController extends Controller
      */
     public function edit($id)
     {
-        $category = Category::find($id);
+        $user = User::find($id);
 
-        if ($category == null){
-            return redirect()->route('category.index');
+        if ($user == null){
+            return redirect()->route('user.index');
         } else {
-            return view('admin.category.edit', ['category' => $category]);
+            return view('admin.user.edit', ['user' => $user]);
         }
 
     }
@@ -103,14 +110,14 @@ class CategoriesController extends Controller
             'name' => 'required',
         ]);
 
-        $category = Category::find($id);
+        $user = User::find($id);
 
-        if ($category == null){
-            return redirect()->route('category.index');
+        if ($user == null){
+            return redirect()->route('user.index');
         } else {
-        $category->name = $request->name;
-        $category->save();
-            return redirect()->route('category.show', ['category' => $category->id]);
+        $user->name = $request->name;
+        $user->save();
+            return redirect()->route('user.show', ['user' => $user->id]);
         }
         
     }
@@ -123,9 +130,7 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-
-        Category::destroy($id);
-        return redirect()->route('category.index');
-
+        User::destroy($id);
+        return redirect()->route('user.index');
     }
 }

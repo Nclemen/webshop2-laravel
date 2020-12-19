@@ -36,7 +36,7 @@
                         <select class="form-control" id="category" name="category">
                                 <option value="">select a category</option>
                                 @foreach ($categories as $item)
-                                        <option @if ($product->category == $item->id) selected @endif value="{{ $item->id }}">{{$item->name}}</option>
+                                        <option @if ($product->category_id == $item->id) selected @endif value="{{ $item->id }}">{{$item->name}}</option>
                                 @endforeach
                         </select>
                         @error('category')

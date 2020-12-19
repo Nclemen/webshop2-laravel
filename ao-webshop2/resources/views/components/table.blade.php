@@ -4,7 +4,9 @@
           @foreach ($headers as $item)
           <th scope="col">{{$item}}</th>
           @endforeach
-         <th scope="col">options</th>
+          @if ($options)
+          <th scope="col">options</th>
+          @endif
       </tr>
     </thead>
     <tbody>
@@ -13,17 +15,38 @@
                 <tr>
                     @foreach ($headers as $head)
                         <td>
-                            @if (empty( $item->$head ))
+                            @if (empty( $item->$head ) && $item->$head !== false )
                                 NULL
                             @else
-                                @if ($head == 'name')
+                                @if ($head == 'id')
                                     <a href="{{route( $modelName .'.show', $item->id)}}" class="text-decoration-none">{{$item->$head}}</a>
                                 @else
-                                    {{$item->$head}}
+                                @switch(is_bool($item->$head))
+                                    @case(true)
+                                        @switch($item->$head)
+                                            @case(1)
+                                                true
+                                                @break
+                                            @case(0)
+                                                false
+                                                @break
+                                            @default
+
+                                        @endswitch
+                                        @break
+                                    @case(false)
+                                        {{$item->$head}}
+                                        @break
+                                    @default
+                                        
+                                @endswitch
+                                    
                                 @endif
                             @endif
                         </td>
                     @endforeach
+                    @if ($options)
+                    {{dd($options)}}
                     <td>
                     <a href="{{route( $modelName . '.edit', $item->id)}}" class="btn btn-info">edit</a>
 
@@ -34,16 +57,19 @@
                         <input type="submit" value="Delete" class="btn btn-danger" >
                     </form>
                     </td>
+                    @endif
                 </tr>
             
         @endforeach
         @else
         <tr>
-            <th scope="row" colspan="12"><p>No categories found</p></th>
+            <th scope="row" colspan="12"><p>No {{$modelName }} found</p></th>
         </tr>
         @endif
+        @if ($options)
         <tr>
             <th scope="row" colspan="12"><a href="{{ route( $modelName . '.create') }}">Create new {{$modelName}}</a></th>
         </tr>
+        @endif
     </tbody>
   </table>

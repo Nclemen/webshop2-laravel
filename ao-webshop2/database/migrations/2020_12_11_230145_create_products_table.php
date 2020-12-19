@@ -15,11 +15,11 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable($value = false);
+            $table->string('name');
             $table->Decimal('price', 7, 2);
-            $table->mediumText('description')->nullable($value = false);
+            $table->mediumText('description');
             $table->foreignId('category_id')
-                  ->nullable($value = true)
+                  ->nullable(true)
                   ->constrained()
                   ->onDelete('set null');
         });

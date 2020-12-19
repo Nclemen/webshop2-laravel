@@ -47,7 +47,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $attributes = [
-        'is_admin' => 0,
+        'is_admin' => false,
     ];
 
     /**
@@ -56,4 +56,12 @@ class User extends Authenticatable
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * Get the order that belong to the user.
+     */
+    public function order()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
