@@ -51,7 +51,10 @@ class OrdersController extends Controller
         if ($order == null){
             return redirect()->route('category.index');
         } else {
-            return view('admin.order.show',['order'=>$order]);
+            return view('admin.order.show',[
+                'order'=>$order,
+                'cart'=>unserialize($order->cart),
+                ]);
         }
     }
 
