@@ -15,7 +15,7 @@
                                               </div>
                                               <div class="col-md-8">
                                                 <div class="card-body">
-                                                  <h5 class="card-title"><a href="#">{{ $item->name }}</a></h5>
+                                                  <h5 class="card-title"><a href="{{route('shop.product', $item->id)}}">{{ $item->name }}</a></h5>
                                                   <p class="card-text">{{ $item->description }}</p>
                                                   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{{str_replace( " " , "" ,$item->name . $item->id)}}">add to cart</button>
                                                   <x-modal :item="$item"/>

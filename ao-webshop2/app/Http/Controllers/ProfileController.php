@@ -24,8 +24,8 @@ class ProfileController extends Controller
     {   
         $user = Auth::user();
 
-        $orders = Order::all();
-
+        $orders = Order::where('user_id', $user->id)->get();
+        
         $headers = Schema::getColumnListing('orders');
 
         unset(

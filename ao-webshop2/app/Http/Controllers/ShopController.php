@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Cart;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema;
 use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Contracts\Session\Session;
 
 class ShopController extends Controller
 {
@@ -22,7 +20,6 @@ class ShopController extends Controller
         $categories = Category::all();
         if (!empty($_GET)) {
             $products = Product::where('category_id', $_GET['category'])->get();
-            // dd($products);
             
             return view('shop.index', [
                 'categories' => $categories,
@@ -39,17 +36,37 @@ class ShopController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function product($id)
+    {
+        $product = Product::find($id);
+
+        if ($product == null){
+            return redirect()->route('product.index');
+        } else {
+            return view('admin.product.show',['product'=>$product]);
+        }
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function cart(Request $request)
     {
-        $cart = $request->session()->get('cart');
+        if ($request->session()->get('cart')) {
+            $cart = $request->session()->get('cart');
 
-        return view('shop.cart',[
-            'cart'=>$cart
-        ]);
+            return view('shop.cart',[
+                'cart'=>$cart
+            ]);
+        }
+        return redirect()->route('shop.index');
     }
 
     /**
@@ -70,6 +87,11 @@ class ShopController extends Controller
         $cart->update($product, (int)$request->amount);
 
         $request->session()->put('cart', $cart);
+
+        if ($cart->totalAmount == 0) {
+            $request->session()->forget('cart');
+            return redirect()->route('shop.index');
+        }
 
         return redirect()->route('shop.cart');
     }
@@ -114,9 +136,14 @@ class ShopController extends Controller
         }
         $cart = new Cart($oldCart);
 
-        $cart->remove($product, $request->only('amount'));
+        $cart->remove($product);
 
         $request->session()->put('cart', $cart);
+
+        if ($cart->totalAmount == 0) {
+            $request->session()->forget('cart');
+            return redirect()->route('shop.index');
+        }
 
         return redirect()->route('shop.cart');
 

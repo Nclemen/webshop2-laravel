@@ -16,6 +16,13 @@
                                                 <div class="alert alert-danger">{{ $message }}</div>
                                         @enderror
 
+                                        <label for="address">address</label>
+                                        <input name="address" id="address" type="text" class="@error('address') is-invalid @enderror form-control" placeholder="address">
+                                        @error('address')
+                                                <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+
+
                                         <label for="email">email</label>
                                         <input name="email" id="email" type="text" class="@error('email') is-invalid @enderror form-control" placeholder="email">
                                         @error('email')

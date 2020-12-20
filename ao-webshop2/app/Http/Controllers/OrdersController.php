@@ -31,11 +31,10 @@ class OrdersController extends Controller
                 'user_id' => $user->id,
             ]);
 
-            return redirect()->route('shop.index');
-        } else {
-            return redirect()->route('shop.index');
         }
         $request->session()->forget('cart');
+
+        return redirect()->route('shop.index');
     }
 
     /**
@@ -48,14 +47,14 @@ class OrdersController extends Controller
     {   
         $order = Order::find($id);
 
-        if ($order == null){
-            return redirect()->route('category.index');
-        } else {
+        if ($order !== null && Auth::user()->id == $order->user_id || Auth::user()->is_admin){
             return view('admin.order.show',[
                 'order'=>$order,
                 'cart'=>unserialize($order->cart),
                 ]);
         }
+
+        return redirect()->route('main.index');
     }
 
 }

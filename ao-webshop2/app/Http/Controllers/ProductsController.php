@@ -18,6 +18,8 @@ class ProductsController extends Controller
     {
         $headers = Schema::getColumnListing('products');
 
+        $headers[array_search("category_id",$headers)] = 'categoryName';
+
         $products = Product::all();
 
         return view('admin.product.index',[

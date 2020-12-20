@@ -80,4 +80,14 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    /**
+     * Get the user's full name.
+     *
+     * @return string
+     */
+    public function getCategoryNameAttribute()
+    {
+        return Category::find($this->category_id)->name;
+    }
 }

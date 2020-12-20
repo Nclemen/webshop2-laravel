@@ -46,7 +46,6 @@
                         </td>
                     @endforeach
                     @if ($options)
-                    {{dd($options)}}
                     <td>
                     <a href="{{route( $modelName . '.edit', $item->id)}}" class="btn btn-info">edit</a>
 
