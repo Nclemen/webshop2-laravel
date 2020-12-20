@@ -29,7 +29,7 @@ Route::get('/', 'PagesController@index')->name('main.index');
 
 Route::get('/login', 'LoginController@loginForm')->name('loginForm');
 
-Route::get('/profile', 'ProfileController@index')->name('profile');
+Route::middleware('auth')->get('/profile', 'ProfileController@index')->name('profile');
 
 Route::middleware('auth')->get('/order/{id}', 'OrdersController@show')->name('order.show');
 
@@ -42,6 +42,8 @@ Route::get('/register', 'RegisterController@registerForm')->name('registerForm')
 Route::post('/register', 'RegisterController@register')->name('register');
 
 Route::get('/shop', 'ShopController@index')->name('shop.index');
+
+Route::get('/shop/product/{id}', 'ShopController@product')->name('shop.product');
 
 Route::get('/shop/cart', 'ShopController@cart')->name('shop.cart');
 
