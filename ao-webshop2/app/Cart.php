@@ -4,8 +4,25 @@ namespace App;
 
 class Cart
 {
+    /**
+     * items in cart
+     *
+     * @var array
+     */
     public $items = null;
+
+    /**
+     * total amount of items in cart
+     *
+     * @var int
+     */
     public $totalAmount = 0;
+
+    /**
+     * total price for the items in cart combined
+     *
+     * @var int
+     */
     public $totalPrice = 0;
 
     public function __construct($oldCart)
@@ -18,6 +35,12 @@ class Cart
         
     }
 
+    /**
+     * add item to cart
+     *
+     * @param App\Models\Product $item
+     * @param int $amount
+     */
     public function add($item,int $amount){
         $newItem = ['amount' => $amount, 'price' => $item->price, 'combinedPrice' => floatval($item->price) * $amount, 'item' => $item];
         if ($this->items) {
@@ -32,6 +55,12 @@ class Cart
         $this->totalPrice +=  $newItem['combinedPrice'] ;
     }
 
+    /**
+     * update amount of item in cart
+     *
+     * @param App\Models\Product $item
+     * @param int $amount
+     */
     public function update($item,int $amount){
         $newItem = ['amount' => $amount, 'price' => $item->price, 'combinedPrice' => floatval($item->price) * $amount, 'item' => $item];
 
@@ -47,6 +76,11 @@ class Cart
 
     }
 
+    /**
+     * remove item from cart
+     *
+     * @param App\Models\Product $item
+     */
     public function remove($item){
             $this->totalPrice = (int)bcsub($this->totalPrice ,$this->items[$item->id]['combinedPrice'], 2);
             $this->totalAmount -=  $this->items[$item->id]['amount'] ;

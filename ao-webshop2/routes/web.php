@@ -29,11 +29,11 @@ Route::get('/', 'PagesController@index')->name('main.index');
 
 Route::get('/login', 'LoginController@loginForm')->name('loginForm');
 
+Route::post('/login', 'LoginController@authenticate')->name('authenticate');
+
 Route::middleware('auth')->get('/profile', 'ProfileController@index')->name('profile');
 
 Route::middleware('auth')->get('/order/{id}', 'OrdersController@show')->name('order.show');
-
-Route::post('/login', 'LoginController@authenticate')->name('authenticate');
 
 Route::post('/logout', 'LoginController@logout')->name('logout');
 
@@ -72,6 +72,8 @@ Route::middleware('isAdmin')->resource('admin/category','CategoriesController');
 Route::middleware('isAdmin')->resource('admin/product','ProductsController');
 
 Route::middleware('isAdmin')->resource('admin/user','UsersController');
+
+Route::middleware('isAdmin')->resource('admin/orders','OrdersController');
 
 
 // Route::get('/hello', function () {
