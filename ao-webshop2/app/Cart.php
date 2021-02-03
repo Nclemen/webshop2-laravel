@@ -79,7 +79,8 @@ class Cart
      * @param int $amount
      * @param  \Illuminate\Http\Request  $request
      */
-    public function update($item,int $amount, Request $request){
+    public function update($item, Request $request){
+        $amount = (int)$request->amount;
         $newItem = ['amount' => $amount, 'price' => $item->price, 'combinedPrice' => floatval($item->price) * $amount, 'item' => $item];
 
         $this->totalPrice = floatval(bcsub($this->totalPrice ,$this->items[$item->id]['combinedPrice'], 2));

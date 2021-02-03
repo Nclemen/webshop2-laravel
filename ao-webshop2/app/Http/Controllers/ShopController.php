@@ -76,7 +76,7 @@ class ShopController extends Controller
 
         $cart = new Cart($request);
 
-        $cart->update($product, (int)$request->amount,$request);
+        $cart->update($product, $request);
 
         if ($request->session()->has('cart')) {
             return redirect()->route('shop.cart');
