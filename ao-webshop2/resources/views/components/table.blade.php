@@ -5,7 +5,7 @@
           <th scope="col">{{$item}}</th>
           @endforeach
           @if ($options)
-          <th scope="col">options</th>
+          <th scope="col-md-3">options</th>
           @endif
       </tr>
     </thead>
@@ -47,14 +47,13 @@
                     @endforeach
                     @if ($options)
                     <td>
-                    <a href="{{route( $modelName . '.edit', $item->id)}}" class="btn btn-info">edit</a>
+                        <form action="{{route( $modelName . '.destroy', $item->id)}}" class="form" method="post">
+                            <a href="{{route( $modelName . '.edit', $item->id)}}" class="btn btn-info">edit</a>
+                            @method('delete')
+                            @csrf
 
-                    <form action="{{route( $modelName . '.destroy', $item->id)}}" class="form" method="post">
-                        @method('delete')
-                        @csrf
-
-                        <input type="submit" value="Delete" class="btn btn-danger" >
-                    </form>
+                            <input type="submit" value="Delete" class="btn btn-danger" >
+                        </form>
                     </td>
                     @endif
                 </tr>

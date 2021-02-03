@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Illuminate\Http\Request;
+
 class Cart
 {
     /**
@@ -25,8 +27,18 @@ class Cart
      */
     public $totalPrice = 0;
 
-    public function __construct($oldCart)
+    /**
+     * cart constructor
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     */
+    function __construct($request)
     {
+        $oldCart = null;
+        if ( $request->session()->has('cart')) {
+            $oldCart = $request->session()->get('cart');
+        }
+
         if ($oldCart){
             $this->items = $oldCart->items;
             $this->totalAmount = $oldCart->totalAmount;
@@ -40,8 +52,9 @@ class Cart
      *
      * @param App\Models\Product $item
      * @param int $amount
+     * @param  \Illuminate\Http\Request  $request
      */
-    public function add($item,int $amount){
+    public function add($item,int $amount, Request $request){
         $newItem = ['amount' => $amount, 'price' => $item->price, 'combinedPrice' => floatval($item->price) * $amount, 'item' => $item];
         if ($this->items) {
             if (array_key_exists($item->id, $this->items)) {
@@ -52,7 +65,11 @@ class Cart
         }  
         $this->items[$item->id] =  $newItem ;
         $this->totalAmount +=  $amount ;
-        $this->totalPrice +=  $newItem['combinedPrice'] ;
+        $this->totalPrice +=  $newItem['combinedPrice'];
+
+        $request->session()->put('cart', $this);
+        
+
     }
 
     /**
@@ -60,8 +77,9 @@ class Cart
      *
      * @param App\Models\Product $item
      * @param int $amount
+     * @param  \Illuminate\Http\Request  $request
      */
-    public function update($item,int $amount){
+    public function update($item,int $amount, Request $request){
         $newItem = ['amount' => $amount, 'price' => $item->price, 'combinedPrice' => floatval($item->price) * $amount, 'item' => $item];
 
         $this->totalPrice = floatval(bcsub($this->totalPrice ,$this->items[$item->id]['combinedPrice'], 2));
@@ -74,16 +92,28 @@ class Cart
             unset($this->items[$item->id]);
         }
 
+        if ($this->totalAmount == 0) {
+            $request->session()->forget('cart');
+        } else {
+            $request->session()->put('cart', $this);
+        }
     }
 
     /**
      * remove item from cart
      *
      * @param App\Models\Product $item
+     * @param  \Illuminate\Http\Request  $request
      */
-    public function remove($item){
-            $this->totalPrice = (int)bcsub($this->totalPrice ,$this->items[$item->id]['combinedPrice'], 2);
-            $this->totalAmount -=  $this->items[$item->id]['amount'] ;
-            unset($this->items[$item->id]);
+    public function remove($item, Request $request){
+        $this->totalPrice = (int)bcsub($this->totalPrice ,$this->items[$item->id]['combinedPrice'], 2);
+        $this->totalAmount -=  $this->items[$item->id]['amount'] ;
+        unset($this->items[$item->id]);
+            
+        if ($this->totalAmount == 0) {
+            $request->session()->forget('cart');
+        } else {
+            $request->session()->put('cart', $this);
+        }
     }
 }

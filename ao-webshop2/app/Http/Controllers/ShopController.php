@@ -16,23 +16,19 @@ class ShopController extends Controller
      */
     public function index()
     {
-        
         $categories = Category::all();
+        $products = null;
+
         if (!empty($_GET)) {
-            $products = Product::where('category_id', $_GET['category'])->get();
-            
-            return view('shop.index', [
-                'categories' => $categories,
-                'products' => $products,
-                ]);
+            $products = Category::find($_GET['category'])->products;
         } else {
             $products = Product::all();
-            
-            return view('shop.index', [
-                'categories' => $categories,
-                'products' => $products,
-                ]);
         }
+
+        return view('shop.index', [
+            'categories' => $categories,
+            'products' => $products,
+            ]);
     }
 
     /**
@@ -77,23 +73,16 @@ class ShopController extends Controller
     public function updateCart(Request $request, $id)
     {
         $product = Product::find($id);
-        $oldCart = null;
+
+        $cart = new Cart($request);
+
+        $cart->update($product, (int)$request->amount,$request);
 
         if ($request->session()->has('cart')) {
-            $oldCart = $request->session()->get('cart');
-        }
-        $cart = new Cart($oldCart);
-
-        $cart->update($product, (int)$request->amount);
-
-        $request->session()->put('cart', $cart);
-
-        if ($cart->totalAmount == 0) {
-            $request->session()->forget('cart');
+            return redirect()->route('shop.cart');
+        } else {
             return redirect()->route('shop.index');
         }
-
-        return redirect()->route('shop.cart');
     }
 
     
@@ -106,16 +95,9 @@ class ShopController extends Controller
     public function addToCart(Request $request, $id)
     {
         $product = Product::find($id);
-        $oldCart = null;
+        $cart = new Cart($request);
 
-        if ($request->session()->has('cart')) {
-            $oldCart = $request->session()->get('cart');
-        }
-        $cart = new Cart($oldCart);
-
-        $cart->add($product, (int)$request->amount);
-
-        $request->session()->put('cart', $cart);
+        $cart->add($product, (int)$request->amount,$request);
 
         return redirect()->route('shop.index');
     }
@@ -129,24 +111,14 @@ class ShopController extends Controller
     public function deleteFromCart(Request $request, $id)
     {
         $product = Product::find($id);
-        $oldCart = null;
+        $cart = new Cart($request);
+
+        $cart->remove($product,$request);
 
         if ($request->session()->has('cart')) {
-            $oldCart = $request->session()->get('cart');
-        }
-        $cart = new Cart($oldCart);
-
-        $cart->remove($product);
-
-        $request->session()->put('cart', $cart);
-
-        if ($cart->totalAmount == 0) {
-            $request->session()->forget('cart');
+            return redirect()->route('shop.cart');
+        } else {
             return redirect()->route('shop.index');
         }
-
-        return redirect()->route('shop.cart');
-
     }
-
 }
