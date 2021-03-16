@@ -27,34 +27,25 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'PagesController@index')->name('main.index');
 
-Route::get('/login', 'LoginController@loginForm')->name('loginForm');
-
-Route::post('/login', 'LoginController@authenticate')->name('authenticate');
-
+// profile routes
 Route::middleware('auth')->get('/profile', 'ProfileController@index')->name('profile');
-
 Route::middleware('auth')->get('/order/{id}', 'OrdersController@show')->name('order.show');
 
+// login routes
+Route::get('/login', 'LoginController@loginForm')->name('loginForm');
+Route::post('/login', 'LoginController@authenticate')->name('authenticate');
 Route::post('/logout', 'LoginController@logout')->name('logout');
-
 Route::get('/register', 'RegisterController@registerForm')->name('registerForm');
-
 Route::post('/register', 'RegisterController@register')->name('register');
 
+//shop routes 
 Route::get('/shop', 'ShopController@index')->name('shop.index');
-
 Route::get('/shop/product/{id}', 'ShopController@product')->name('shop.product');
-
 Route::get('/shop/cart', 'ShopController@cart')->name('shop.cart');
-
 Route::put('/shop/cart/{id}', 'ShopController@updateCart')->name('shop.updateCart');
-
 Route::post('/shop/add-to-cart/{id}', 'ShopController@addToCart')->name('shop.addToCart');
-
 Route::post('/shop/subtract-from-cart/{id}', 'ShopController@subtractFromCart')->name('shop.subtractFromCart');
-
 Route::delete('/shop/delete-from-cart/{id}', 'ShopController@deleteFromCart')->name('shop.deleteFromCart');
-
 Route::middleware('auth')->post('/shop/cart/order', 'OrdersController@order')->name('placeOrder');
 
 // admin routes

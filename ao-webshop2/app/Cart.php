@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Http\Request;
+use App\Models\Product;
+use Session;
 
 class Cart
 {
@@ -27,6 +29,8 @@ class Cart
      */
     public $totalPrice = 0;
 
+    private $session;
+
     /**
      * cart constructor
      * 
@@ -34,10 +38,8 @@ class Cart
      */
     function __construct($request)
     {
-        $oldCart = null;
-        if ( $request->session()->has('cart')) {
-            $oldCart = $request->session()->get('cart');
-        }
+        $session = $request->session();
+        $oldCart = $session->has('cart') ? $oldCart = $session->get('cart') : null;
 
         if ($oldCart){
             $this->items = $oldCart->items;
@@ -48,28 +50,31 @@ class Cart
     }
 
     /**
+     * get item to cart
+     *
+     */
+    public function get(){
+        return $this;
+    }
+
+    /**
      * add item to cart
      *
      * @param App\Models\Product $item
      * @param int $amount
-     * @param  \Illuminate\Http\Request  $request
      */
-    public function add($item,int $amount, Request $request){
+    public function add($item,int $amount){
         $newItem = ['amount' => $amount, 'price' => $item->price, 'combinedPrice' => floatval($item->price) * $amount, 'item' => $item];
-        if ($this->items) {
-            if (array_key_exists($item->id, $this->items)) {
+            if ($this->items && array_key_exists($item->id, $this->items)) {
                 $newItem = $this->items[ $item->id];
                 $newItem['amount'] += $amount;
                 $newItem['combinedPrice'] += $item->price * $amount;
             }
-        }  
         $this->items[$item->id] =  $newItem ;
         $this->totalAmount +=  $amount ;
         $this->totalPrice +=  $newItem['combinedPrice'];
 
-        $request->session()->put('cart', $this);
-        
-
+        $this->session->put('cart', $this);
     }
 
     /**
@@ -77,10 +82,9 @@ class Cart
      *
      * @param App\Models\Product $item
      * @param int $amount
-     * @param  \Illuminate\Http\Request  $request
      */
-    public function update($item, Request $request){
-        $amount = (int)$request->amount;
+    public function update(Product $item,int $amount){
+        $amount = (int)$amount;
         $newItem = ['amount' => $amount, 'price' => $item->price, 'combinedPrice' => floatval($item->price) * $amount, 'item' => $item];
 
         $this->totalPrice = floatval(bcsub($this->totalPrice ,$this->items[$item->id]['combinedPrice'], 2));
@@ -94,9 +98,9 @@ class Cart
         }
 
         if ($this->totalAmount == 0) {
-            $request->session()->forget('cart');
+            $this->session->forget('cart');
         } else {
-            $request->session()->put('cart', $this);
+            $this->session->put('cart', $this);
         }
     }
 
@@ -104,17 +108,16 @@ class Cart
      * remove item from cart
      *
      * @param App\Models\Product $item
-     * @param  \Illuminate\Http\Request  $request
      */
-    public function remove($item, Request $request){
+    public function remove($item){
         $this->totalPrice = (int)bcsub($this->totalPrice ,$this->items[$item->id]['combinedPrice'], 2);
         $this->totalAmount -=  $this->items[$item->id]['amount'] ;
         unset($this->items[$item->id]);
             
         if ($this->totalAmount == 0) {
-            $request->session()->forget('cart');
+            $this->session->forget('cart');
         } else {
-            $request->session()->put('cart', $this);
+            $this->session->put('cart', $this);
         }
     }
 }

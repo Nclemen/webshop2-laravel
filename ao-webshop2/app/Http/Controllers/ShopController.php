@@ -34,30 +34,30 @@ class ShopController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param \App\Models\Product $id
      * @return \Illuminate\Http\Response
      */
-    public function product($id)
+    public function product(Product $id)
     {
-        $product = Product::find($id);
-
-        if ($product == null){
+        if ($id == null){
             return redirect()->route('product.index');
         } else {
-            return view('admin.product.show',['product'=>$product]);
+            return view('admin.product.show',['product'=>$id]);
         }
     }
 
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function cart(Request $request)
     {
-        if ($request->session()->get('cart')) {
-            $cart = $request->session()->get('cart');
-
+        $cart = new Cart($request);
+        $cart->get();
+     
+        if ($cart->totalAmount != 0) {
             return view('shop.cart',[
                 'cart'=>$cart
             ]);
@@ -67,16 +67,15 @@ class ShopController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
+     * 
+     * @param \App\Models\Product $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function updateCart(Request $request, $id)
+    public function updateCart(Request $request,Product $id)
     {
-        $product = Product::find($id);
-
         $cart = new Cart($request);
-
-        $cart->update($product, $request);
+        $cart->update($id,(int) $request->amount);
 
         if ($request->session()->has('cart')) {
             return redirect()->route('shop.cart');
@@ -89,15 +88,15 @@ class ShopController extends Controller
     /**
      * add product(s) to cart
      *
+     * @param \App\Models\Product $id
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function addToCart(Request $request, $id)
+    public function addToCart(Request $request,Product $id)
     {
-        $product = Product::find($id);
+        $amount = (int)$request->amount;
         $cart = new Cart($request);
-
-        $cart->add($product, (int)$request->amount,$request);
+        $cart->add($id, $amount);
 
         return redirect()->route('shop.index');
     }
@@ -105,15 +104,14 @@ class ShopController extends Controller
     /**
      * delete product from cart
      *
+     * @param \App\Models\Product $id
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function deleteFromCart(Request $request, $id)
+    public function deleteFromCart(Request $request,Product $id)
     {
-        $product = Product::find($id);
         $cart = new Cart($request);
-
-        $cart->remove($product,$request);
+        $cart->remove($id);
 
         if ($request->session()->has('cart')) {
             return redirect()->route('shop.cart');
